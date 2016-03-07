@@ -1,8 +1,7 @@
 #!/usr/bin/python2
-import pymssql #install from http://www.lfd.uci.edu/~gohlke/pythonlibs/#pymssql
-
-conn = pymssql.connect(	server='86.169.104.93:50507', user='cryptanalysis',	password='Blockchain123', database='MyBitcoinData')
-# 127.0.0.1
+import pymssql  # to install follow the instructions of the first paragraph from here: https://azure.microsoft.com/en-gb/documentation/articles/sql-database-develop-python-simple-windows/
+				# available from http://www.lfd.uci.edu/~gohlke/pythonlibs/#pymssql
+conn = pymssql.connect(	server='127.0.0.1:50507', user='cryptanalysis',	password='Blockchain', database='MyBitcoinData')
 
 htmlstart = """
 	<!DOCTYPE html>
@@ -13,6 +12,7 @@ htmlstart = """
 	</head>
 	<body>
 	<h1>Repeated random numbers used in the Bitcoin Blockchain</h1>
+	The source code to reproduce this can be found <a href="https://github.com/JasonPap/Reused-Bitcoin-Numbers">here</a>
 	<table border="1" cellpadding="3" cellspacing="3">
 """
 
@@ -34,6 +34,7 @@ dbquery = """
 """
 webpage = htmlstart
 badrand = conn.cursor()
+
 # get the bad randoms from Database
 badrand.execute(dbquery)
 
@@ -41,7 +42,10 @@ row = badrand.fetchone()
 webpage += "<tr><td><b>Random number</b></td><td><b>Transaction Hash : input script index</b>"
 previous_random = ""
 transactionHashes = dict() # key: transaction hash , value: list of input scripts IDs that have the bad random number 
+
 while row:
+	# rows fetched contain row[0] = the reused random, row[1] = the hash of the transaction in which it appeared
+	# and row[2] = the ID of the input script inside the transaction where the random was used 
 	current_random = str(row[0].encode("hex"))
 	current_transaction_hash = str(row[1].encode("hex"))
 	current_iscript_id = str(row[2])
