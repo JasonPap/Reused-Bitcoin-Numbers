@@ -1,7 +1,11 @@
 #!/usr/bin/python2
+import datetime
 import pymssql  # to install follow the instructions of the first paragraph from here: https://azure.microsoft.com/en-gb/documentation/articles/sql-database-develop-python-simple-windows/
 				# available from http://www.lfd.uci.edu/~gohlke/pythonlibs/#pymssql
+
 conn = pymssql.connect(	server='127.0.0.1:50507', user='cryptanalysis',	password='Blockchain', database='MyBitcoinData')
+
+date = str(datetime.datetime.now())
 
 htmlstart = """
 	<!DOCTYPE html>
@@ -12,9 +16,9 @@ htmlstart = """
 	</head>
 	<body>
 	<h1>Repeated random numbers used in the Bitcoin Blockchain</h1>
-	The source code to reproduce this can be found <a href="https://github.com/JasonPap/Reused-Bitcoin-Numbers">here</a>
-	<table border="1" cellpadding="3" cellspacing="3">
+	The source code to reproduce this can be found <a href="https://github.com/JasonPap/Reused-Bitcoin-Numbers">here</a><br>
 """
+htmlstart += "Generated: " + date + """<br><table border="1" cellpadding="3" cellspacing="3">"""
 
 htmlend = """
 	</table>
